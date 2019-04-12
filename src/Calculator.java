@@ -1,25 +1,34 @@
-import java.util.*;
+import exceptions.WrongSymbolException;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Calculator {
 
-    public int calculate(String expression) {
-        expression = expression.replaceAll("\\s+", "");
-        List<String> elements = parseExpression(expression);
-        elements = getPostfixNotation(elements);
+    public String calculate(String expression) {
+        List<String> elements;
+        try {
+            elements = parseExpression(expression.replaceAll("\\s+", ""));
+            elements = getPostfixNotation(elements);
+        } catch (WrongSymbolException e) {
+            return "Ошибка! Введён недопустимый символ!";
+        }
 
-        return calculatePostfixNotation(elements);
+        return expression + " = " + calculatePostfixNotation(elements).toString();
     }
 
-    private int calculatePostfixNotation(List<String> elements) {
-        Stack<Integer> stack = new Stack<>();
+    private Double calculatePostfixNotation(List<String> elements) {
+        Stack<Double> stack = new Stack<>();
 
         for (String element : elements) {
             if (isNumeric(element)) {
-                stack.push(Integer.parseInt(element));
+                stack.push(Double.parseDouble(element));
             } else {
-                int tmpVar = stack.pop();
+                double tmpVar = stack.pop();
                 switch (element) {
                     case "+":
                         stack.push(stack.pop() + tmpVar);
@@ -34,12 +43,12 @@ public class Calculator {
                         stack.push(stack.pop() / tmpVar);
                         break;
                     case "^":
-                        stack.push((int) Math.pow(stack.pop(), tmpVar));
+                        stack.push(Math.pow(stack.pop(), tmpVar));
                         break;
                 }
             }
         }
-        int result = stack.pop();
+        double result = stack.pop();
         return stack.isEmpty() ? result : stack.pop() + result;
     }
 
@@ -78,12 +87,11 @@ public class Calculator {
         return stack;
     }
 
-    private List<String> parseExpression(String expression) {
-        List<String> queue = new LinkedList<>();
+    private List<String> parseExpression(String expression) throws WrongSymbolException {
+        Stack<String> stack = new Stack<>();
 
         Pattern operatorPattern = Pattern.compile("[\\-+*()^/]");
         Matcher operatorMatcher = operatorPattern.matcher(expression);
-        Pattern operandPattern = Pattern.compile("\\d+");
 
         int i = 0;
         String tmpStr;
@@ -91,14 +99,18 @@ public class Calculator {
         while (operatorMatcher.find()) {
             tmpStr = expression.substring(i, operatorMatcher.start());
 
-            if (operandPattern.matcher(tmpStr).matches()) {
-                queue.add(tmpStr);
+            if (isNumeric(tmpStr)) {
+                stack.push(tmpStr);
+            } else if (tmpStr.length() == 0 || operatorPattern.matcher(tmpStr).matches()) {
+                stack.push(operatorMatcher.group());
+            } else {
+                throw new WrongSymbolException();
             }
-            queue.add(operatorMatcher.group());
+
             i = operatorMatcher.end();
         }
 
-        return queue;
+        return stack;
     }
 
     private boolean isNumeric(String str) {
