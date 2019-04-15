@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class Calculator {
 
-    private final String ALLOWED_OPERATORS = "[\\-+*()^/]";
+    private final static String ALLOWED_OPERATORS = "[\\-+*()^/]";
 
     public String calculate(String expression) {
         List<String> elements;
