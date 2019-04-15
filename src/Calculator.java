@@ -14,23 +14,22 @@ public class Calculator {
 
     public String calculate(String expression) {
         List<String> elements;
+        double result;
         try {
             elements = parseExpression(expression.replaceAll("\\s+", ""));
-            System.out.println(elements);
             if (!checkBrackets(elements)) {
                 return "Ошибка! Неверное положение или кол-во скобок!";
             }
             elements = optimizeOperators(elements);
-            System.out.println(elements);
             elements = getPostfixNotation(elements);
-            System.out.println(elements);
+            result = calculatePostfixNotation(elements);
         } catch (WrongSymbolException e) {
             return "Ошибка! Введён недопустимый символ!";
         } catch (WrongSymbolOrderException e) {
             return "Ошибка! Неверный порядок операторов!\nОшибочный оператор: '" + e.getMessage() + "'";
         }
 
-        return expression + " = " + calculatePostfixNotation(elements).toString();
+        return expression + " = " + result;
     }
 
     private List<String> optimizeOperators(List<String> elements) throws WrongSymbolOrderException {
@@ -94,7 +93,7 @@ public class Calculator {
         return bracketStack.isEmpty();
     }
 
-    private Double calculatePostfixNotation(List<String> elements) {
+    private Double calculatePostfixNotation(List<String> elements) throws WrongSymbolException {
         Stack<Double> stack = new Stack<>();
 
         for (String element : elements) {
@@ -118,6 +117,8 @@ public class Calculator {
                     case "^":
                         stack.push(Math.pow(stack.pop(), tmpVar));
                         break;
+                    default:
+                        throw new WrongSymbolException();
                 }
             }
         }
