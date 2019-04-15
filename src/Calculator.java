@@ -27,7 +27,7 @@ public class Calculator {
         } catch (WrongSymbolException e) {
             return "Ошибка! Введён недопустимый символ!";
         } catch (WrongSymbolOrderException e) {
-            return "Ошибка! Неверный порядок операторов!";
+            return "Ошибка! Неверный порядок операторов!\nОшибочный оператор: '" + e.getMessage() + "'";
         }
 
         return expression + " = " + calculatePostfixNotation(elements).toString();
@@ -35,34 +35,51 @@ public class Calculator {
 
     private List<String> optimizeOperators(List<String> elements) throws WrongSymbolOrderException {
         Stack<String> stack = new Stack<>();
+        boolean operatorFlag = false;
+        boolean minusFlag = false;
+
         for (String element : elements) {
             if (isNumeric(element)) {
-                stack.push(element);
+                if (minusFlag) {
+                    stack.push("-" + element);
+                    minusFlag = false;
+                } else {
+                    stack.push(element);
+                }
+                operatorFlag = false;
             } else {
-                System.out.println(stack);
-                if (isBracket(stack.peek()) || isBracket(element)) {
+                if (element.equals("(")) {
                     stack.push(element);
                     continue;
                 }
-                switch (element) {
-                    case ("+"):
-                        break;
-                    case ("-"):
-                        if (stack.peek().equals("-")) {
-                            stack.pop();
-                            stack.push("+");
+                if (operatorFlag) {
+                    if (element.equals(")")) {
+                        throw new WrongSymbolOrderException(stack.peek());
+                    }
+                    if (element.equals("-") && !minusFlag) {
+                        minusFlag = true;
+                    } else {
+                        throw new WrongSymbolOrderException(element);
+                    }
+                } else {
+                    if (stack.isEmpty()) {
+                        if (element.equals("-")) {
+                            minusFlag = true;
+                            operatorFlag = true;
+                            continue;
                         } else {
-                            throw new WrongSymbolOrderException();
+                            throw new WrongSymbolOrderException(element);
                         }
-                        break;
-                    default:
-                        stack.push(element);
+                    }
+                    stack.push(element);
+                    if (!element.equals(")")) {
+                        operatorFlag = true;
+                    }
                 }
             }
         }
         return stack;
     }
-
 
     private boolean checkBrackets(List<String> elements) {
         Stack<String> bracketStack = new Stack<>();
@@ -76,7 +93,6 @@ public class Calculator {
         }
         return bracketStack.isEmpty();
     }
-
 
     private Double calculatePostfixNotation(List<String> elements) {
         Stack<Double> stack = new Stack<>();
