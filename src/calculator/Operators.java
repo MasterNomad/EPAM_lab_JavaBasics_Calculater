@@ -1,6 +1,7 @@
 package calculator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public enum Operators {
 
@@ -25,7 +26,7 @@ public enum Operators {
     DIVIDE("/") {
         @Override
         BigDecimal apply(BigDecimal x, BigDecimal y) {
-            return x.divide(y);
+            return x.divide(y, 5, RoundingMode.HALF_UP);
         }
     },
     POWER("^") {

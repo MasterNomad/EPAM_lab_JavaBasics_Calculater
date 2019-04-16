@@ -14,7 +14,6 @@ public class Parser {
 
         while (stringTokenizer.hasMoreTokens()) {
             String element = stringTokenizer.nextToken();
-
             if (validator.isNumeric(element)) {
                 resultStack.push(element);
             } else {
@@ -33,6 +32,10 @@ public class Parser {
                 }
             }
         }
+        while (!tmpStack.isEmpty()) {
+            resultStack.push(tmpStack.pop());
+        }
+
         return resultStack;
     }
 

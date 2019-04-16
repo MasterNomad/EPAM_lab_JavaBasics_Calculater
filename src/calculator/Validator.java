@@ -1,17 +1,13 @@
 package calculator;
 
-import exceptions.WrongBracketsExeption;
-import exceptions.WrongSymbolException;
+import exceptions.WrongBracketsException;
+import exceptions.NotAllowSymbolException;
+import exceptions.WrongSymbolOrderException;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Validator {
-
-    public void validate(List<String> elements) throws WrongBracketsExeption, WrongSymbolException {
-        checkSymbols(elements);
-        checkBrackets(elements);
-    }
 
     public boolean isNumeric(String str) {
         try {
@@ -22,35 +18,33 @@ public class Validator {
         }
     }
 
-    private void checkSymbols(List<String> elements) throws WrongSymbolException {
-        for (String element : elements) {
-            if (isNotAllow(element)) {
-                throw new WrongSymbolException();
-            }
+    public void checkSymbolsOrder (String expression) throws WrongSymbolOrderException {
+        Matcher matcher = Pattern.compile("[./*\\-+]{2,}").matcher(expression);
+        if (matcher.find()){
+            throw new WrongSymbolOrderException("Ошибка! Введён запрещённый порядок операторов: ");
         }
     }
 
-    private void checkBrackets(List<String> elements) throws WrongBracketsExeption {
-        Stack<String> bracketStack = new Stack<>();
-
-        for (String element : elements) {
-            if (element.equals("(")) {
-                bracketStack.push(element);
-            }
-            if (element.equals(")") && (bracketStack.isEmpty() || !bracketStack.pop().equals("("))) {
-                throw new WrongBracketsExeption();
-            }
-        }
-        if (!bracketStack.isEmpty()) {
-            throw new WrongBracketsExeption();
+    public void checkAllowSymbols(String expression) throws NotAllowSymbolException {
+        Matcher matcher = Pattern.compile("[^(.)/*\\-+0-9]").matcher(expression);
+        if (matcher.find()){
+            throw new NotAllowSymbolException("Ошибка! Введён запрещённый символ: " + matcher.group());
         }
     }
 
-    private boolean isNotAllow(String str) {
-        return !(isNumeric(str) || isSeparator(str));
-    }
+    public void checkBrackets(String expression) throws WrongBracketsException {
+        int bracketCounter = 0;
 
-    private boolean isSeparator(String str) {
-        return str.length() <= 1 && Separators.getSeparatorsString().contains(str);
+        for (int i = 0; i < expression.length(); i++) {
+            if (expression.charAt(i) == '(') {
+                bracketCounter++;
+            }
+            if (expression.charAt(i) == ')') {
+                bracketCounter--;
+            }
+        }
+        if (bracketCounter != 0) {
+            throw new WrongBracketsException("Ошибка! Неверное кол-во или положение скобок!");
+        }
     }
 }
