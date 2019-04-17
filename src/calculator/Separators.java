@@ -1,46 +1,27 @@
 package calculator;
 
-public enum Separators {
+import java.util.HashMap;
+import java.util.Set;
 
-    OPEN_BRACKET(0, "(") {},
-    CLOSE_BRACKET(1, ")") {},
-    PLUS(2, "+") {},
-    MINUS(2, "-") {},
-    TIMES(3, "*") {},
-    DIVIDE(3, "/") {},
-    POWER(4, "^") {};
+class Separators {
 
-    int priority;
-    String value;
+    private HashMap<String, Integer> separators = new HashMap<>();
 
-    Separators(int priority, String value) {
-        this.priority = priority;
-        this.value = value;
+    Separators() {
+        separators.put("(", 0);
+        separators.put(")", 1);
+        separators.put("+", 2);
+        separators.put("-", 2);
+        separators.put("*", 3);
+        separators.put("/", 3);
+        separators.put("^", 4);
     }
 
-    public String getValue() {
-        return value;
+    Set<String> getSeparators() {
+        return separators.keySet();
     }
 
-    public int getPriority() {
-        return priority;
+    int getPriority(String separator) {
+        return separators.get(separator);
     }
-
-
-    public static Separators getEnum(String value) {
-        for (Separators separator : values())
-            if (separator.getValue().equals(value)) return separator;
-        throw new IllegalArgumentException();
-    }
-
-    public static String getSeparatorsString() {
-        StringBuilder result = new StringBuilder();
-
-        for (Separators separator : Separators.values() ){
-            result.append(separator.getValue());
-        }
-
-        return result.toString();
-    }
-
 }
