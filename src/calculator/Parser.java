@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-public class Parser {
+class Parser {
 
-    public List<String> parseStringToPostfixNotationList(String expression) {
+    List<String> parseStringToPostfixNotationList(String expression) {
         Stack<String> resultStack = new Stack<>();
         Stack<String> tmpStack = new Stack<>();
         Validator validator = new Validator();
+
         StringTokenizer stringTokenizer = new StringTokenizer(expression, Separators.getSeparatorsString(), true);
 
         while (stringTokenizer.hasMoreTokens()) {
@@ -21,8 +22,15 @@ public class Parser {
                     tmpStack.push(element);
                 } else {
                     int elementPriority = Separators.getEnum(element).getPriority();
-                    while (!tmpStack.empty() && elementPriority != 0 && Separators.getEnum(tmpStack.peek()).getPriority() >= elementPriority) {
+                    int stackElementPriority = Separators.getEnum(tmpStack.peek()).getPriority();
+
+                    while (elementPriority != 0 && stackElementPriority >= elementPriority) {
                         resultStack.push(tmpStack.pop());
+                        if (!tmpStack.empty()) {
+                            stackElementPriority = Separators.getEnum(tmpStack.peek()).getPriority();
+                        } else {
+                            break;
+                        }
                     }
                     if (!tmpStack.empty() && Separators.getEnum(tmpStack.peek()).getPriority() == 0 && elementPriority == 1) {
                         tmpStack.pop();
@@ -32,11 +40,11 @@ public class Parser {
                 }
             }
         }
+
         while (!tmpStack.isEmpty()) {
             resultStack.push(tmpStack.pop());
         }
 
         return resultStack;
     }
-
 }

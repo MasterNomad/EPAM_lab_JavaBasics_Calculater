@@ -40,9 +40,7 @@ public class Calculator {
         expression = expression.replaceAll("\\s+", "");
         expression = expression.replaceAll(",", ".");
         expression = expression.replaceAll("^\\+", "0+");
-        expression = expression.replaceAll("\\(\\+", "(0+");
         expression = expression.replaceAll("^-", "0-");
-        expression = expression.replaceAll("\\(-", "(0-");
 
         return expression;
     }

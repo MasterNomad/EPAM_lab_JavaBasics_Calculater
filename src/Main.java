@@ -5,7 +5,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String expression = "-5/(+10+81)";
+        String expression = "5/(10+81)";
 
         try {
             System.out.println(expression + "=" + new Calculator().calculate(expression));
