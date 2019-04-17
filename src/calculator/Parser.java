@@ -5,8 +5,6 @@ import java.util.Stack;
 
 class Parser {
 
-    private Separators separators = new Separators();
-
     List<String> parseStringToPostfixNotationList(String expression) {
         Stack<String> resultStack = new Stack<>();
         Stack<String> tmpStack = new Stack<>();
@@ -21,18 +19,18 @@ class Parser {
                 if (tmpStack.empty()) {
                     tmpStack.push(element);
                 } else {
-                    int elementPriority = separators.getPriority(element);
-                    int stackElementPriority = separators.getPriority(tmpStack.peek());
+                    int elementPriority = Separators.getPriority(element);
+                    int stackElementPriority = Separators.getPriority(tmpStack.peek());
 
                     while (elementPriority != 0 && stackElementPriority >= elementPriority) {
                         resultStack.push(tmpStack.pop());
                         if (!tmpStack.empty()) {
-                            stackElementPriority = separators.getPriority(tmpStack.peek());
+                            stackElementPriority = Separators.getPriority(tmpStack.peek());
                         } else {
                             break;
                         }
                     }
-                    if (!tmpStack.empty() && separators.getPriority(tmpStack.peek()) == 0 && elementPriority == 1) {
+                    if (!tmpStack.empty() && Separators.getPriority(tmpStack.peek()) == 0 && elementPriority == 1) {
                         tmpStack.pop();
                     } else {
                         tmpStack.push(element);
@@ -49,7 +47,7 @@ class Parser {
 
     private String getRegex() {
         StringBuilder regex = new StringBuilder();
-        for (String separator : separators.getSeparators()) {
+        for (String separator : Separators.getSeparators()) {
             if (separator.equals("-")) {
                 regex.append("\\");
             }
