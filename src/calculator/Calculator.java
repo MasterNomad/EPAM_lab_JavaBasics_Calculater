@@ -41,6 +41,8 @@ public class Calculator {
         expression = expression.replaceAll(",", ".");
         expression = expression.replaceAll("^\\+", "0+");
         expression = expression.replaceAll("^-", "0-");
+        expression = expression.replaceAll("\\(\\+", "(0+");
+        expression = expression.replaceAll("\\(-", "(0-");
 
         return expression;
     }
