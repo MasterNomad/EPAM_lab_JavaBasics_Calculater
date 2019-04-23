@@ -1,11 +1,11 @@
 package calculator;
 
 import java.util.HashMap;
-import java.util.Set;
 
 class Separators {
 
     private static final HashMap<String, Integer> SEPARATORS = new HashMap<>();
+
     static {
         SEPARATORS.put("(", 0);
         SEPARATORS.put(")", 1);
@@ -16,11 +16,19 @@ class Separators {
         SEPARATORS.put("^", 4);
     }
 
-    static Set<String> getSeparators() {
-        return SEPARATORS.keySet();
-    }
-
     static int getPriority(String separator) {
         return SEPARATORS.get(separator);
+    }
+
+    static String getRegex() {
+        StringBuilder regex = new StringBuilder();
+        for (String separator : SEPARATORS.keySet()) {
+            if (separator.equals("-")) {
+                regex.append("\\");
+            }
+            regex.append(separator);
+
+        }
+        return regex.toString();
     }
 }

@@ -46,14 +46,6 @@ class Parser {
     }
 
     private String getRegex() {
-        StringBuilder regex = new StringBuilder();
-        for (String separator : Separators.getSeparators()) {
-            if (separator.equals("-")) {
-                regex.append("\\");
-            }
-            regex.append(separator);
-        }
-
-        return "(?<=[" + regex.toString() + "])|(?=[" + regex.toString() + "])";
+        return "(?<=[" + Separators.getRegex() + "])|(?=[" + Separators.getRegex() + "])";
     }
 }

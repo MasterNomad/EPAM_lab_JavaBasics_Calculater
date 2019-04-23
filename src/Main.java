@@ -5,7 +5,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String expression = "5 * (10 + 81 / (5 - 4) * 9) + (8 / (9 - 5) - 11,5)";
+        String expression = "5 * (10 + 81 / (5 - 4^2) * 9) + (8 / (9 - 5) - 11,5)";
 
         try {
             System.out.println(expression + " = " + new Calculator().calculate(expression));
@@ -13,5 +13,4 @@ public class Main {
             System.err.println(e.getMessage());
         }
     }
-
 }

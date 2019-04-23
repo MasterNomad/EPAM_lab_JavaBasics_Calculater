@@ -1,7 +1,7 @@
 package calculator;
 
-import exceptions.WrongBracketsException;
 import exceptions.NotAllowSymbolException;
+import exceptions.WrongBracketsException;
 import exceptions.WrongSymbolOrderException;
 
 import java.util.regex.Matcher;
@@ -19,15 +19,15 @@ class Validator {
     }
 
     void checkSymbolsOrder(String expression) throws WrongSymbolOrderException {
-        Matcher matcher = Pattern.compile("[./*\\-+]{2,}|(\\(+[^\\d])|([^\\d]\\)+)").matcher(expression);
-            if (matcher.find()){
+        Matcher matcher = Pattern.compile("[.^/*\\-+]{2,}").matcher(expression);
+        if (matcher.find()) {
             throw new WrongSymbolOrderException("Ошибка! Введён запрещённый порядок символов: " + matcher.group());
         }
     }
 
     void checkAllowSymbols(String expression) throws NotAllowSymbolException {
-        Matcher matcher = Pattern.compile("[^(.)/*\\-+0-9]").matcher(expression);
-        if (matcher.find()){
+        Matcher matcher = Pattern.compile("[^." + Separators.getRegex() + "+0-9]").matcher(expression);
+        if (matcher.find()) {
             throw new NotAllowSymbolException("Ошибка! Введён запрещённый символ: " + matcher.group());
         }
     }
