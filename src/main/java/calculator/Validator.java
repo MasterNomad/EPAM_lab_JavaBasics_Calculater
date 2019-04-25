@@ -8,9 +8,9 @@ import exceptions.WrongSymbolOrderException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Validator {
+public class Validator {
 
-    boolean isNumeric(String str) {
+    public boolean isNumeric(String str) {
         try {
             Double.parseDouble(str);
             return true;
@@ -19,21 +19,21 @@ class Validator {
         }
     }
 
-    void checkSymbolsOrder(String expression) throws WrongSymbolOrderException {
-        Matcher matcher = Pattern.compile("[.^/*\\-+]{2,}").matcher(expression);
+    public void checkSymbolsOrder(String expression) throws WrongSymbolOrderException {
+        Matcher matcher = Pattern.compile("[.^/*\\-+]{2,}|[.^/*\\-+]\\)+|\\(+[.^/*\\-+]").matcher(expression);
         if (matcher.find()) {
             throw new WrongSymbolOrderException("Ошибка! Введён запрещённый порядок символов: " + matcher.group());
         }
     }
 
-    void checkAllowSymbols(String expression) throws NotAllowSymbolException {
+    public void checkAllowSymbols(String expression) throws NotAllowSymbolException {
         Matcher matcher = Pattern.compile("[^." + Separators.getRegex() + "+0-9]").matcher(expression);
         if (matcher.find()) {
             throw new NotAllowSymbolException("Ошибка! Введён запрещённый символ: " + matcher.group());
         }
     }
 
-    void checkBrackets(String expression) throws WrongBracketsException {
+    public void checkBrackets(String expression) throws WrongBracketsException {
         int bracketCounter = 0;
 
         for (int i = 0; i < expression.length(); i++) {
