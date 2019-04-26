@@ -1,5 +1,6 @@
 package calculator;
 
+import calculator.Calculator;
 import org.junit.Test;
 
 import java.math.BigDecimal;

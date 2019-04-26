@@ -2,23 +2,31 @@ package calculator;
 
 
 import exceptions.NotAllowSymbolException;
+import exceptions.NotEnoughSymbolsException;
 import exceptions.WrongBracketsException;
 import exceptions.WrongSymbolOrderException;
 
 import java.math.BigDecimal;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
 
 public class Calculator {
 
     public BigDecimal calculate(String expression) throws NotAllowSymbolException, WrongSymbolOrderException, WrongBracketsException {
-        String optimizeExpression = optimizeString(expression);
+        String optimizedExpression = optimizeString(expression);
         Validator validator = new Validator();
-        validator.checkAllowSymbols(optimizeExpression);
-        validator.checkSymbolsOrder(optimizeExpression);
-        validator.checkBrackets(optimizeExpression);
-        List<String> postfixNotation = new Parser().parseStringToPostfixNotationList(optimizeExpression);
-        return calculatePostfixNotation(postfixNotation);
+        validator.checkAllowSymbols(optimizedExpression);
+        validator.checkSymbolsOrder(optimizedExpression);
+        validator.checkBrackets(optimizedExpression);
+        List<String> postfixNotation = new Parser().parseStringToPostfixNotationList(optimizedExpression);
+        BigDecimal result;
+        try {
+            result = calculatePostfixNotation(postfixNotation);
+        } catch (EmptyStackException e) {
+            throw new NotEnoughSymbolsException("Ошибка! Введеного выражения недостаточно для вычисления");
+        }
+        return result;
     }
 
     private BigDecimal calculatePostfixNotation(List<String> elements) {

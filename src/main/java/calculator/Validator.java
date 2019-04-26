@@ -20,7 +20,8 @@ public class Validator {
     }
 
     public void checkSymbolsOrder(String expression) throws WrongSymbolOrderException {
-        Matcher matcher = Pattern.compile("[.^/*\\-+]{2,}|[.^/*\\-+]\\)+|\\(+[.^/*\\-+]").matcher(expression);
+        Pattern pattern = Pattern.compile("^[*./^][.^/*\\-+]{2,}|[.^/*\\-+]\\)+|\\(+[.^/*\\-+]|[*/.^+-]$");
+        Matcher matcher = pattern.matcher(expression);
         if (matcher.find()) {
             throw new WrongSymbolOrderException("Ошибка! Введён запрещённый порядок символов: " + matcher.group());
         }

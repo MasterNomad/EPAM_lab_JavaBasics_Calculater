@@ -1,5 +1,6 @@
 package calculator;
 
+import calculator.Parser;
 import org.junit.Test;
 
 import java.util.Arrays;
