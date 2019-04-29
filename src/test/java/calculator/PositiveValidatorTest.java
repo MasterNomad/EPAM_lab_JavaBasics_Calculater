@@ -11,7 +11,7 @@ public class PositiveValidatorTest {
 
     @Test
     public void testIsNumericFalse() {
-        String test = "(8+5/)+5";
+        String test = "5/";
         assertFalse(validator.isNumeric(test));
     }
 
@@ -23,18 +23,18 @@ public class PositiveValidatorTest {
 
     @Test
     public void checkBrackets() {
-        String test = "(8+5)+5";
+        String test = "(8+5)+((5))";
         validator.checkBrackets(test);
     }
     @Test
     public void checkSymbolsOrder() {
-        String test = "(8+5)+5";
+        String test = "(8+5)-5";
         validator.checkSymbolsOrder(test);
     }
 
     @Test
     public void checkAllowSymbols() {
-        String test = "(8+5)+5";
+        String test = "()/*+-^1234567890.";
         validator.checkAllowSymbols(test);
     }
 
